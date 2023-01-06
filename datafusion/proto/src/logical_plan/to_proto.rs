@@ -1228,6 +1228,8 @@ impl TryFrom<&BuiltinScalarFunction> for protobuf::ScalarFunction {
             BuiltinScalarFunction::DatePart => Self::DatePart,
             BuiltinScalarFunction::DateTrunc => Self::DateTrunc,
             BuiltinScalarFunction::DateBin => Self::DateBin,
+            BuiltinScalarFunction::DateBinGapfill => Self::DateBinGapfill,
+            BuiltinScalarFunction::LOCF => Self::Locf,
             BuiltinScalarFunction::MD5 => Self::Md5,
             BuiltinScalarFunction::SHA224 => Self::Sha224,
             BuiltinScalarFunction::SHA256 => Self::Sha256,

@@ -135,12 +135,13 @@ pub fn return_type(
         BuiltinScalarFunction::DateTrunc => {
             Ok(DataType::Timestamp(TimeUnit::Nanosecond, None))
         }
-        BuiltinScalarFunction::DateBin => {
+        BuiltinScalarFunction::DateBin | BuiltinScalarFunction::DateBinGapfill => {
             Ok(DataType::Timestamp(TimeUnit::Nanosecond, None))
         }
         BuiltinScalarFunction::InitCap => {
             utf8_to_str_type(&input_expr_types[0], "initcap")
         }
+        BuiltinScalarFunction::LOCF => Ok(input_expr_types[0].clone()),
         BuiltinScalarFunction::Left => utf8_to_str_type(&input_expr_types[0], "left"),
         BuiltinScalarFunction::Lower => utf8_to_str_type(&input_expr_types[0], "lower"),
         BuiltinScalarFunction::Lpad => utf8_to_str_type(&input_expr_types[0], "lpad"),
@@ -444,14 +445,17 @@ pub fn signature(fun: &BuiltinScalarFunction) -> Signature {
             ],
             fun.volatility(),
         ),
-        BuiltinScalarFunction::DateBin => Signature::exact(
-            vec![
-                DataType::Interval(IntervalUnit::DayTime),
-                DataType::Timestamp(TimeUnit::Nanosecond, None),
-                DataType::Timestamp(TimeUnit::Nanosecond, None),
-            ],
-            fun.volatility(),
-        ),
+        BuiltinScalarFunction::DateBin | BuiltinScalarFunction::DateBinGapfill => {
+            Signature::exact(
+                vec![
+                    DataType::Interval(IntervalUnit::DayTime),
+                    DataType::Timestamp(TimeUnit::Nanosecond, None),
+                    DataType::Timestamp(TimeUnit::Nanosecond, None),
+                ],
+                fun.volatility(),
+            )
+        }
+        BuiltinScalarFunction::LOCF => Signature::any(1, fun.volatility()),
         BuiltinScalarFunction::DatePart => Signature::one_of(
             vec![
                 TypeSignature::Exact(vec![DataType::Utf8, DataType::Date32]),

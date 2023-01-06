@@ -1355,6 +1355,28 @@ async fn date_bin() {
 }
 
 #[tokio::test]
+async fn date_bin_gapfill() {
+    let ctx = SessionContext::new();
+    let sql = "SELECT DATE_BIN(INTERVAL '15 minutes', TIMESTAMP '2022-08-03 14:38:50Z', TIMESTAMP '1970-01-01T00:00:00Z') AS res";
+    let result = try_execute_to_batches(&ctx, sql).await;
+    assert_eq!(
+        result.err().unwrap().to_string(),
+        "Arrow error: External error: This feature is not implemented: DATE_BIN_GAPFILL is not yet supported"
+    );
+}
+
+#[tokio::test]
+async fn locf() {
+    let ctx = SessionContext::new();
+    let sql = "SELECT LOCF(10.0) AS res";
+    let result = try_execute_to_batches(&ctx, sql).await;
+    assert_eq!(
+        result.err().unwrap().to_string(),
+        "Arrow error: External error: This feature is not implemented: LOCF is not yet supported"
+    );
+}
+
+#[tokio::test]
 async fn timestamp_add_interval_second() -> Result<()> {
     let ctx = SessionContext::new();
 

@@ -397,6 +397,24 @@ pub fn date_bin(args: &[ColumnarValue]) -> Result<ColumnarValue> {
     })
 }
 
+/// DATE_BIN_GAPFILL "scalar" function.
+/// This function is special because it works in concert with GROUP BY and LOCF()
+/// to fill in gaps when processing time series data.
+pub fn date_bin_gapfill(_args: &[ColumnarValue]) -> Result<ColumnarValue> {
+    Err(DataFusionError::NotImplemented(
+        "DATE_BIN_GAPFILL is not yet supported".to_string(),
+    ))
+}
+
+/// LOCF (last observation carried forward) "scalar" function.
+/// This function is special because it works in concert with GROUP BY and DATE_BIN_GAPFILL()
+/// to fill in gaps when processing time series data.
+pub fn locf(_args: &[ColumnarValue]) -> Result<ColumnarValue> {
+    Err(DataFusionError::NotImplemented(
+        "LOCF is not yet supported".to_string(),
+    ))
+}
+
 macro_rules! extract_date_part {
     ($ARRAY: expr, $FN:expr) => {
         match $ARRAY.data_type() {
@@ -839,6 +857,28 @@ mod tests {
         assert_eq!(
             res.err().unwrap().to_string(),
             "This feature is not implemented: DATE_BIN only supports literal values for the origin argument, not arrays"
+        );
+    }
+
+    #[test]
+    fn test_date_bin_gapfill() {
+        let res = date_bin_gapfill(&[
+            ColumnarValue::Scalar(ScalarValue::IntervalDayTime(Some(1))),
+            ColumnarValue::Scalar(ScalarValue::TimestampNanosecond(Some(1), None)),
+            ColumnarValue::Scalar(ScalarValue::TimestampNanosecond(Some(1), None)),
+        ]);
+        assert_eq!(
+            res.err().unwrap().to_string(),
+            "This feature is not implemented: DATE_BIN_GAPFILL is not yet supported"
+        );
+    }
+
+    #[test]
+    fn test_locf() {
+        let res = locf(&[ColumnarValue::Scalar(ScalarValue::Float64(Some(10.0)))]);
+        assert_eq!(
+            res.err().unwrap().to_string(),
+            "This feature is not implemented: LOCF is not yet supported"
         );
     }
 

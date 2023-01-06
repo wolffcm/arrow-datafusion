@@ -94,8 +94,12 @@ pub enum BuiltinScalarFunction {
     DateTrunc,
     /// date_bin
     DateBin,
+    /// date_bin_gapfill
+    DateBinGapfill,
     /// initcap
     InitCap,
+    /// locf (last observation carried forward)
+    LOCF,
     /// left
     Left,
     /// lpad
@@ -268,6 +272,8 @@ impl BuiltinScalarFunction {
             BuiltinScalarFunction::CurrentTime => Volatility::Stable,
 
             // Volatile builtin functions
+            BuiltinScalarFunction::DateBinGapfill => Volatility::Volatile,
+            BuiltinScalarFunction::LOCF => Volatility::Volatile,
             BuiltinScalarFunction::Random => Volatility::Volatile,
             BuiltinScalarFunction::Uuid => Volatility::Volatile,
         }
@@ -327,7 +333,9 @@ impl FromStr for BuiltinScalarFunction {
             "date_part" | "datepart" => BuiltinScalarFunction::DatePart,
             "date_trunc" | "datetrunc" => BuiltinScalarFunction::DateTrunc,
             "date_bin" => BuiltinScalarFunction::DateBin,
+            "date_bin_gapfill" => BuiltinScalarFunction::DateBinGapfill,
             "initcap" => BuiltinScalarFunction::InitCap,
+            "locf" => BuiltinScalarFunction::LOCF,
             "left" => BuiltinScalarFunction::Left,
             "length" => BuiltinScalarFunction::CharacterLength,
             "lower" => BuiltinScalarFunction::Lower,

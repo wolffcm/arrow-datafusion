@@ -269,6 +269,10 @@ Note that `CAST(.. AS Timestamp)` converts to Timestamps with Nanosecond resolut
 
 ### `date_bin`
 
+### `date_bin_gapfill`
+
+### `locf`
+
 ### `from_unixtime`
 
 ### `now`

@@ -481,6 +481,13 @@ nary_scalar_expr!(Concat, concat_expr, "concatenates several strings");
 scalar_expr!(DatePart, date_part, part date, "extracts a subfield from the date");
 scalar_expr!(DateTrunc, date_trunc, part date, "truncates the date to a specified level of precision");
 scalar_expr!(DateBin, date_bin, stride source origin, "coerces an arbitrary timestamp to the start of the nearest specified interval");
+scalar_expr!(DateBinGapfill, date_bin_gapfill, stride source origin, "behaves similar to DATE_BIN but will create a row for every interval");
+scalar_expr!(
+    LOCF,
+    locf,
+    aggregate,
+    "is used with DATE_BIN_GAPFILL to fill gaps in time series data"
+);
 scalar_expr!(
     ToTimestampMillis,
     to_timestamp_millis,
@@ -721,6 +728,8 @@ mod test {
         test_scalar_expr!(DatePart, date_part, part, date);
         test_scalar_expr!(DateTrunc, date_trunc, part, date);
         test_scalar_expr!(DateBin, date_bin, stride, source, origin);
+        test_scalar_expr!(DateBinGapfill, date_bin_gapfill, stride, source, origin);
+        test_scalar_expr!(LOCF, locf, aggregate);
         test_scalar_expr!(FromUnixtime, from_unixtime, unixtime);
 
         test_unary_scalar_expr!(ArrowTypeof, arrow_typeof);
